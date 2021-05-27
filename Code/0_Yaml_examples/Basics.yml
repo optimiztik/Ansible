@@ -1,0 +1,50 @@
+# Create a Dictionary 
+Key: Value
+
+
+#Create Dictionary in Dictionary
+Key:
+  Key1: Value
+  Key2: Value
+
+#Create Nested Dictionary
+
+employee:
+    name: Ashok
+    gender: male
+    age: 24
+    address:
+        city: Bangalore
+        state: 'Karnataka'
+        country: 'India'
+
+# Create a list
+- Item1
+- Item2
+- Item3
+
+# Create list inside dictioinary
+employee:
+    name: Ashok
+    gender: male
+    age: 24
+    skills:
+     - ansible
+     - python
+     - terraform
+     - aws
+
+#Create list of dictionaries
+employee:
+  - 
+    name: Ashok
+    skills:
+    - ansible
+    - python
+  - 
+    name: Sanjay
+    skills:
+      - angular
+      - java
+
+

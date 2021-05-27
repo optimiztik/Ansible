@@ -1,0 +1,44 @@
+web1.company.com
+web2.company.com
+
+#Add an alias to the servers
+web1 ansible_host=web1.company.com
+web2 ansible_host=web2.company.com
+mysql1 ansible_host=db1.company.com
+
+# Add parameters to each server
+# Web Servers
+web1 ansible_host=web1.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web2 ansible_host=web2.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web3 ansible_host=web3.company.com ansible_connection=winrm ansible_user=administrator ansible_password=Password123!
+
+# Database Servers
+db1 ansible_host=db1.company.com ansible_connection=winrm ansible_user=administrator ansible_password=Password123!
+
+
+#Create Grouping of servers
+[web_servers]
+web1
+web2
+web3 
+
+[db_servers]
+db1
+
+
+#Create group of group
+[all_servers:children]
+web_servers
+db_servers
+
+
+#Create different groups out of same servers
+[Linux_servers]
+web1
+web2
+
+[Windows_servers]
+web3
+db1
+
+
