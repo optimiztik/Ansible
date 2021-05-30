@@ -1,0 +1,98 @@
+#Difference between Shell & Command module 
+#Shell inbuilt functions(ex- set) and redirection will not work on command modules, ex- > < | 
+ansible all  -a "df -h > /tmp/df.out" -i 65.0.169.46, -k
+ansible all -m shell  -a "df -h > /tmp/df.out" -i 65.0.169.46, -k
+
+
+#Install apache httpd
+ansible server -m yum "name=httpd state=present" -k
+#copy file to destination host
+ansible server -m copy -a "src=/Users/nanandsubram/Documents/Devops/Ansible/Code/1_Adhoc_examples/index.html dest=/var/www/html owner=apache group=apache mode=0644"
+
+#Restart httpd service
+ansible all -i <server> -m service "name=httpd state=restarted" -k
+
+
+### SETUP Module
+
+To gather facts about a node, this helps in fetching dynamic facts like ( version,  distribution etc.. ) and use it for checking conditions in playbooks.
+
+
+**On Control node**
+To run it on group linux ( includes both Centos and ubuntu VMs )
+ansible linux -i inventory -m setup
+
+To run it on only centos 
+ansible centos -i inventory -m setup
+
+
+### FILE Module
+
+
+Creating Directory using File module: 
+ansible centos -i inventory -m file -a "path=/tmp/dir state=directory mode='0755'"
+
+Delete Complete Directory
+ansible centos -i inventory -m file -a "dest =/tmp/dir state = absent"
+
+
+### COMMAND Module
+
+To reboot all servers in inventory with parallel forks of 10
+
+ansible all -i inventory -a "/sbin/reboot" -f 10
+
+### SHELL Module
+
+Ansible Shell module is designed to work only with Linux based Machines and not Windows. For windows you should use win_shell module
+
+
+Executing Shell command usermode
+ansible centos -i inventory -m shell -a “usermod -ag admin test_user“
+
+Combining two commands in single ones using shell module
+ansible centos -i inventory -m shell -a "chmod 666 filename && chown user:group filename"
+
+Executing command that involves pipe, redirection like shell functions
+ansible centos -i inventory -m shell -a "df -h | awk '{print $6 " : " $4}' > /tmp/fsinfo.txt"
+
+Execute a shell script
+ansible centos -i inventory -m shell -a "script.sh >> output.txt"
+
+
+> *Now try to run the command that involves pipe or redirection using command module and register the result.*
+
+### YUM/APT Package Module
+
+Install using yum or apt based on OS flavour
+
+
+Install httpd service
+ansible centos -i inventory -m yum -a "name=httpd state=present"
+
+Remove httpd service
+ansible centos -i inventory -m yum -a "name=httpd state=absent"
+
+### USER Module
+
+Manage user accounts using this module
+
+
+Create a user 'admin' and add to "wheel" group
+ansible centos -i inventory -m user -a "name=admin password=admin group=wheel"
+
+Remove a user 'admin'
+ansible centos -i inventory -m user -a "name=admin state=absent remove=yes"
+
+### SERVICE Module
+
+Manage services using this module
+
+Starting a service httpd
+ansible centos -i inventory -m service -a "name=httpd state=started"
+
+Stopping a service httpd
+ansible centos -i inventory -m service -a "name=httpd state=stopped"
+
+Restart service httpd
+ansible centos -i inventory -m service -a "name=httpd state=restarted"
