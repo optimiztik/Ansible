@@ -1,0 +1,11 @@
+---
+  - hosts: redhat
+    gather_facts: no
+    tasks: 
+      - name: Copy file with owner & permissions
+        copy:
+          src: /data/Ansible/Code/E5_copy/config_test
+          dest: /tmp/config_test
+          owner: root
+          group: root
+          mode: '0644'
