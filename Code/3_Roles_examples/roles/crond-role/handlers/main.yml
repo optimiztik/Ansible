@@ -1,0 +1,7 @@
+---
+
+- name: Restart {{ crond_service_name }}
+  service:
+    name={{ crond_service_name }}
+    state=restarted
+

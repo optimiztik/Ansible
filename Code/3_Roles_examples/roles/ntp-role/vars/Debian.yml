@@ -1,0 +1,6 @@
+---
+ntp_package_name: ntp
+ntp_service_name: ntp
+ntp_conf_owner: root
+ntp_conf_group: root
+ntp_conf_mode: "0644"

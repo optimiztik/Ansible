@@ -1,0 +1,8 @@
+---
+  - hosts: all
+    vars_files:
+      - vars/site_blr.yml
+    roles:
+      - ntp-role
+      - crond-role
+      - sshd-role

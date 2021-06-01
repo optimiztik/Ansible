@@ -1,0 +1,51 @@
+---
+
+- name: Check operating system support
+  when: >
+    not (False
+     or (ansible_os_family    == "RedHat" and ansible_distribution_major_version    == "7" )
+     or (ansible_os_family    == "RedHat" and ansible_distribution_major_version    == "6" )
+     or (ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04")
+     or (ansible_distribution == "Ubuntu" and ansible_distribution_version == "14.04")
+    )
+  fail:
+    msg: "Role not supported or validated for this operation system version"
+
+- name: Include os specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Install ntp package on CentOS/RedHat
+  when: ansible_os_family == "RedHat"
+  yum:
+    pkg: "{{ ntp_package_name }}"
+    state: present
+
+- name: Install ntp package on Ubuntu
+  when: ansible_os_family == "Debian"
+  apt:
+    pkg: "{{ ntp_package_name }}"
+    state: present
+
+- name: Disable systemd-timesyncd service on Ubuntu 16.04
+  when: ansible_os_family == "Debian" and ansible_distribution_major_version == "16"
+  service:
+    name: systemd-timesyncd
+    state: stopped
+    enabled: no
+
+- name: Copy /etc/ntp.conf
+  template:
+    src: ntp.conf-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.j2
+    dest: /etc/ntp.conf
+    owner: "{{ ntp_conf_owner }}"
+    group: "{{ ntp_conf_group }}"
+    mode: "{{ ntp_conf_mode }}"
+    backup: yes
+  notify:
+    - Restart ntpd
+
+- name: Enable ntp service
+  service:
+    name: "{{ ntp_service_name }}"
+    state: started
+    enabled: yes
