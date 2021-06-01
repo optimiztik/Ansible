@@ -1,6 +1,5 @@
 ---
   - hosts:
-    remote_users: apache
     become: true
     tasks:
         - name: Install apache
